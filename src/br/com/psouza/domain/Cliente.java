@@ -97,9 +97,7 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return "br.com.psouza.domain.Cliente{" +
-                "nome='" + nome + '\'' +
-                ", cpf=" + cpf +
-                '}';
+        return nome +
+                ", CPF: " + cpf;
     }
 }

@@ -40,6 +40,11 @@ public class App {
                         "Digite o CPF",
                         "Consultar", JOptionPane.INFORMATION_MESSAGE);
                 consultar(dados);
+            } else if (isOpcaoExclusao(opcao)) {
+                String dados = JOptionPane.showInputDialog(null,
+                        "Digite o CPF do cliente que deseja excluir",
+                        "Consultar", JOptionPane.INFORMATION_MESSAGE);
+                excluir(dados);
             }
 
             opcao = JOptionPane.showInputDialog(null,
@@ -47,7 +52,20 @@ public class App {
                     "Cadastro", JOptionPane.INFORMATION_MESSAGE);
         }
 
+        // Fazer opções e ALTERAÇÃO!
 
+
+    }
+
+    // Método para excluir cliente
+    private static void excluir(String dados) {
+        Cliente cliente = iClienteDAO.consultar(Long.parseLong(dados));
+        if (cliente != null) {
+            iClienteDAO.excluir(Long.parseLong(dados));
+            JOptionPane.showMessageDialog(null, "Cliente " + cliente.toString() + " excluído com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Cliente NÃO existe!", "Erro", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     // Método para consultar cliente por CPF(dados)
@@ -62,13 +80,6 @@ public class App {
         }
     }
 
-    private static boolean isOpcaoConsultar(String opcao) {
-        if ("2".equals(opcao)) {
-            return true;
-        }
-        return false;
-    }
-
     // Método para cadastrar clientes recebendo dados
     private static void cadastrar(String dados) {
         String[] dadosSeparados = dados.split(",");
@@ -81,13 +92,6 @@ public class App {
         } else {
             JOptionPane.showMessageDialog(null, "Cliente já se encontra cadastrado!", "Erro", JOptionPane.INFORMATION_MESSAGE);
         }
-    }
-
-    private static boolean isOpcaoSair(String opcao) {
-        if ("5".equals(opcao)) {
-            return true;
-        }
-        return false;
     }
 
     // Opcao sair, fecha a aplicação
@@ -105,6 +109,28 @@ public class App {
 
     private static boolean isOpcaoCadastro(String opcao) {
         if ("1".equals(opcao)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean isOpcaoConsultar(String opcao) {
+        if ("2".equals(opcao)) {
+            return true;
+        }
+        return false;
+    }
+
+
+    private static boolean isOpcaoExclusao(String opcao) {
+        if ("3".equals(opcao)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean isOpcaoSair(String opcao) {
+        if ("5".equals(opcao)) {
             return true;
         }
         return false;
