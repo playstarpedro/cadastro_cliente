@@ -11,6 +11,9 @@ public class App {
     public static void main(String args[]) {
         iClienteDAO = new ClienteMapDAO();
 
+
+        // Interface:
+
         String opcao = JOptionPane.showInputDialog(null,
                 "Digite 1 para cadastro, 2 para consultar, 3 para exclusão, 4 para alteração ou 5 para sair",
                 "Cadastro", JOptionPane.INFORMATION_MESSAGE);
@@ -58,40 +61,8 @@ public class App {
         }
     }
 
-    // 4-) Método parar alterar dados do cliente
-    private static void alterar(String dados) {
-        String[] dadosSeparados = dados.split(",");
-        Cliente cliente = new Cliente(dadosSeparados[0], dadosSeparados[1], dadosSeparados[2], dadosSeparados[3], dadosSeparados[4], dadosSeparados[5], dadosSeparados[6]);
-        Cliente clienteAConsultar = iClienteDAO.consultar(cliente.getCpf());
-        if (clienteAConsultar != null) {
-            iClienteDAO.alterar(cliente);
-            JOptionPane.showMessageDialog(null, "Cliente " + cliente.toString() + " alterado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(null, "CPF não existe", "Erro", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
 
-    // 3-) Método para excluir cliente
-    private static void excluir(String dados) {
-        Cliente cliente = iClienteDAO.consultar(Long.parseLong(dados));
-        if (cliente != null) {
-            iClienteDAO.excluir(Long.parseLong(dados));
-            JOptionPane.showMessageDialog(null, "Cliente " + cliente.toString() + " excluído com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(null, "Cliente NÃO existe!", "Erro", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    // 2-) Método para consultar cliente por CPF(dados)
-    private static void consultar(String dados) {
-        // Validar se foi passado somento o CPF!
-        Cliente cliente = iClienteDAO.consultar(Long.parseLong(dados));
-        if (cliente != null) {
-            JOptionPane.showMessageDialog(null, "Cliente encontrado: " + cliente.toString(), "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(null, "Cliente NÃO encontrado :(", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
+    // Métodos:
 
     // 1-) Método para cadastrar clientes recebendo dados
     private static void cadastrar(String dados) {
@@ -103,15 +74,62 @@ public class App {
         if (isCadastrado) {
             JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(null, "Cliente já se encontra cadastrado!", "Erro", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Cliente já se encontra cadastrado!", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    // Opcao sair, fecha a aplicação
+    // 2-) Método para consultar cliente por CPF(dados)
+    private static void consultar(String dados) {
+        // Valida se foi passado somento o CPF!
+        if (!dados.matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "CPF inválido! Deve conter apenas dígitos numéricos.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        Cliente cliente = iClienteDAO.consultar(Long.parseLong(dados));
+        if (cliente != null) {
+            JOptionPane.showMessageDialog(null, "Cliente encontrado: " + cliente.toString(), "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Cliente NÃO encontrado :(", "Sucesso", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // 3-) Método para excluir cliente
+    private static void excluir(String dados) {
+        // Valida se foi passado somento o CPF!
+        if (!dados.matches("\\d+")) {
+            JOptionPane.showMessageDialog(null, "CPF inválido! Deve conter apenas dígitos numéricos.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        Cliente cliente = iClienteDAO.consultar(Long.parseLong(dados));
+        if (cliente != null) {
+            iClienteDAO.excluir(Long.parseLong(dados));
+            JOptionPane.showMessageDialog(null, "Cliente " + cliente.toString() + " excluído com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Cliente NÃO existe!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // 4-) Método parar alterar dados do cliente
+    private static void alterar(String dados) {
+        String[] dadosSeparados = dados.split(",");
+        Cliente cliente = new Cliente(dadosSeparados[0], dadosSeparados[1], dadosSeparados[2], dadosSeparados[3], dadosSeparados[4], dadosSeparados[5], dadosSeparados[6]);
+        Cliente clienteAConsultar = iClienteDAO.consultar(cliente.getCpf());
+        if (clienteAConsultar != null) {
+            iClienteDAO.alterar(cliente);
+            JOptionPane.showMessageDialog(null, "Cliente " + cliente.toString() + " alterado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "CPF não existe", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Método sair, fecha a aplicação
     private static void sair() {
         JOptionPane.showMessageDialog(null, "Até logo", "Sair", JOptionPane.INFORMATION_MESSAGE);
         System.exit(0);
     }
+
+
+    // Validações de Opções:
 
     private static boolean isOpcaoValida(String opcao) {
         if ("1".equals(opcao) || "2".equals(opcao) || "3".equals(opcao) || "4".equals(opcao) || "5".equals(opcao)) {
